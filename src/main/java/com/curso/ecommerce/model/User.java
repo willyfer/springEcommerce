@@ -1,7 +1,18 @@
 package com.curso.ecommerce.model;
 
-public class User {
+import java.util.List;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+@Entity
+public class User {
+	@Id
+	@GeneratedValue( strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
 	private String userName;
@@ -10,10 +21,17 @@ public class User {
 	private String type;
 	private String password;
 	
+	@OneToMany(mappedBy = "user")
+	private List<Product> products;
+	
+	@OneToMany(mappedBy = "user")
+	private List<Order> orders;
 	
 	public User() {}
 	
-	public User(Integer id, String name, String userName, String email, String phone, String type, String password) {
+
+	public User(Integer id, String name, String userName, String email, String phone, String type, String password,
+			List<Product> products,List<Order> orders) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -22,9 +40,13 @@ public class User {
 		this.phone = phone;
 		this.type = type;
 		this.password = password;
+		this.products = products;
+		this.orders = orders;
 	}
-	
-	
+
+
+
+
 	public Integer getId() {
 		return id;
 	}
@@ -73,7 +95,27 @@ public class User {
 		return "User [id=" + id + ", name=" + name + ", userName=" + userName + ", email=" + email + ", phone=" + phone
 				+ ", type=" + type + ", password=" + password + "]";
 	}
+
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
+
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
 	
-	
+ 
+
+
 	
 }

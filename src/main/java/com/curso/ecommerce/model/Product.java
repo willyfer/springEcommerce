@@ -1,6 +1,17 @@
 package com.curso.ecommerce.model;
 
+import java.util.List;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+@Entity
 public class Product {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String Name;
 	private String Description;
@@ -8,10 +19,15 @@ public class Product {
 	private double price;
 	private int quantity;
 	
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	private User user;
+	
+
 	
 	public Product() {}
 	
-	public Product(Integer id, String name, String description, String image, double price, int quantity) {
+	public Product(Integer id, String name, String description, String image, double price, int quantity, User user) {
 		super();
 		this.id = id;
 		Name = name;
@@ -19,6 +35,7 @@ public class Product {
 		this.image = image;
 		this.price = price;
 		this.quantity = quantity;
+		this.setUser(user);
 	}
 	
 	
@@ -58,6 +75,22 @@ public class Product {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", Name=" + Name + ", Description=" + Description + ", image=" + image + ", price="
+				+ price + ", quantity=" + quantity + "]";
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	 
 	
 	
 
