@@ -30,8 +30,7 @@ public class User {
 	public User() {}
 	
 
-	public User(Integer id, String name, String userName, String email, String phone, String type, String password,
-			List<Product> products,List<Order> orders) {
+	public User(Integer id, String name, String userName, String email, String phone, String type, String password) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -40,8 +39,7 @@ public class User {
 		this.phone = phone;
 		this.type = type;
 		this.password = password;
-		this.products = products;
-		this.orders = orders;
+	 
 	}
 
 
