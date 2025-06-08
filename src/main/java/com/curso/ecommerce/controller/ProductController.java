@@ -1,5 +1,6 @@
 package com.curso.ecommerce.controller;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.slf4j.*;
@@ -11,10 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.curso.ecommerce.model.Product;
 import com.curso.ecommerce.model.User;
 import com.curso.ecommerce.service.ProductService;
+import com.curso.ecommerce.service.UploadFileService;
 
  
 @Controller
@@ -25,6 +28,9 @@ public class ProductController {
 	
 	@Autowired
 	private ProductService  productService; 
+	
+	@Autowired
+	private UploadFileService uploadFile;
 	
 	@GetMapping("")
 	public String products (Model model) {
@@ -37,12 +43,22 @@ public class ProductController {
 	}
 	
 	@PostMapping("/save")
-	public String save(Product product) {
+	public String save(Product product, @RequestParam("img") MultipartFile file) throws IOException {
 		
 		LOGGER.info("Este es el obj producto {}", product);
 		User u = new User(1, "", "", "", "", "", "");
 		product.setUser(u);
+		
+		if(product.getId() == null) {
+			String imgName = uploadFile.saveImg(file);
+			product.setImage(imgName);
+		}else {
+			
+			
+		}
+		
 		productService.save(product);
+		
 		return "redirect:/products";
 	}
 	
@@ -57,8 +73,22 @@ public class ProductController {
 	}
 	
 	@PostMapping("/update")
-	public String update(Product product) {
+	public String update(Product product, @RequestParam("img") MultipartFile file) throws IOException {
 		LOGGER.info("Producto update {}", product);
+		Product p = new Product();
+		p = productService.get(product.getId()).get();
+		if(file.isEmpty()) { // not change image
+			product.setImage(p.getImage());
+		}else { // change image
+
+			if(!p.getImage().equals("default.jpg")) {
+				uploadFile.deleteImg(p.getImage());
+			}
+			String imgName = uploadFile.saveImg(file);
+			product.setImage(imgName);
+			
+		}
+		product.setUser(p.getUser());
 		productService.update(product);
 		return  "redirect:/products";
 		
@@ -66,6 +96,12 @@ public class ProductController {
 	
 	@GetMapping("/delete/{id}")
 	public String delete(@PathVariable Integer id) {
+		
+		Product p = new Product();
+		p = productService.get(id).get();
+		if(!p.getImage().equals("default.jpg")) {
+			uploadFile.deleteImg(p.getImage());
+		}
 		productService.delete(id);
 		return "redirect:/products";
 		
