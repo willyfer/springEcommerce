@@ -28,8 +28,6 @@ public class HomeController {
 	@Autowired
 	private ProductService productService;
 
-	 
- 
 	List<DetailOrder> details = new ArrayList<DetailOrder>();
 	Order order = new Order();
 
@@ -53,16 +51,54 @@ public class HomeController {
 	}
 
 	@PostMapping("/cart")
-	public String cart(@RequestParam Integer id,@RequestParam Integer quantity) {
+	public String cart(@RequestParam Integer id, @RequestParam Integer quantity, Model model) {
 		DetailOrder detailOrder = new DetailOrder();
-		
+
 		Product product = new Product();
-		
+
 		double total = 0;
-		Optional<Product> productOptional=productService.get(id);
-		LOGGER.info("productOptional {}",productOptional.get());
-		LOGGER.info("cantidad {}",quantity);
+		Optional<Product> productOptional = productService.get(id);
+		LOGGER.info("productOptional {}", productOptional.get());
+		LOGGER.info("cantidad {}", quantity);
+		product = productOptional.get();
+		detailOrder.setQuantity(quantity);
+		detailOrder.setPrice(product.getPrice());
+		detailOrder.setName(product.getName());
+		detailOrder.setProduct(product);
+		detailOrder.setTotal(quantity * product.getPrice());
+		details.add(detailOrder);
+		total = details.stream().mapToDouble(dt -> dt.getTotal()).sum();
+		LOGGER.info("total {}", total);
+		order.setTotal(total);
+
+		model.addAttribute("cart", details);
+		model.addAttribute("order", order);
+		LOGGER.info("cart {}", details);
+		LOGGER.info("order {}", order);
 
 		return "user/carrito";
+	}
+
+	@GetMapping("/delete/cart/{id}")
+	public String deleteProductCart(@PathVariable Integer id, Model model) {
+		List<DetailOrder> newDetailOrders = new ArrayList<DetailOrder>();
+
+		for (DetailOrder detailOrder : details) {
+			if (detailOrder.getProduct().getId() != id) {
+				newDetailOrders.add(detailOrder);
+			}
+		}
+		details = newDetailOrders;
+		double total = 0;
+		total = details.stream().mapToDouble(dt -> dt.getTotal()).sum();
+		order.setTotal(total);
+
+		model.addAttribute("cart", details);
+		model.addAttribute("order", order);
+		LOGGER.info("cart {}", details);
+		LOGGER.info("order {}", order);
+
+		return "user/carrito";
+
 	}
 }

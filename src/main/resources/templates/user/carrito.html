@@ -12,10 +12,10 @@
 
 
   <!-- Bootstrap core CSS -->
-  <link th:href="@{vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
 
   <!-- Custom styles for this template -->
-  <link th:href="@{css/heroic-features.css}" rel="stylesheet">
+  <link th:href="@{/css/heroic-features.css}" rel="stylesheet">
 
 </head>
 
@@ -55,12 +55,12 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td >Nombre</td>
-                  <td >Precio</td>
-                  <td>Cantidad</td>
-                  <td >Total</td>
-                  <td><a href="#" class="btn btn-danger">Quitar</a></td>
+                <tr th:each="dtail: ${cart}">
+                  <td th:text="${dtail.product.id}"></td>
+                  <td th:text="${dtail.price}"></td>
+                  <td th:text="${dtail.quantity}">Cantidad</td>
+                  <td th:text="${dtail.total	}">Total</td>
+                  <td><a th:href="@{/delete/cart/{id} (id=${dtail.product.id})}" class="btn btn-danger">Quitar</a></td>
                 </tr>
               </tbody>
             </table>
@@ -70,7 +70,7 @@
             <h2 class="card-title">SUBTOTAL</h2>
 
             <ul class="list-group">
-              <li class="list-group-item"><h5>Total: $ 10</h5></li>
+              <li class="list-group-item"><h5 th:text="${order.total}">Total: $ 10</h5></li>
               <a href="resumenorden.html" class="btn btn-dark">Ver Orden</a>
             </ul>
           </div>
