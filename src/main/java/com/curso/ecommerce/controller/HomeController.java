@@ -3,6 +3,8 @@ package com.curso.ecommerce.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,5 +117,19 @@ public class HomeController {
 		model.addAttribute("cart", details);
 		model.addAttribute("order", order);
 		return "user/carrito";
+	}
+	
+	@GetMapping("/order")
+	public String order(Model model) {
+		model.addAttribute("cart", details);
+		model.addAttribute("order", order);
+		return "user/resumenorden";
+	}
+	
+	@PostMapping("/search")
+	public String searchProduct(@RequestParam String name, Model model) {
+		List<Product> products = productService.findAll().stream().filter(p->p.getImage().contains(name)).collect(Collectors.toList());
+		model.addAttribute("products", products);
+		return "user/home";
 	}
 }

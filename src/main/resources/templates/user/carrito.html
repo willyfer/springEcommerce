@@ -56,7 +56,7 @@
               </thead>
               <tbody>
                 <tr th:each="dtail: ${cart}">
-                  <td th:text="${dtail.product.id}"></td>
+                  <td th:text="${dtail.name}"></td>
                   <td th:text="${dtail.price}"></td>
                   <td th:text="${dtail.quantity}">Cantidad</td>
                   <td th:text="${dtail.total	}">Total</td>
@@ -71,7 +71,7 @@
 
             <ul class="list-group">
               <li class="list-group-item"><h5 th:text="${order.total}">Total: $ 10</h5></li>
-              <a href="resumenorden.html" class="btn btn-dark">Ver Orden</a>
+              <a th:href="@{/order}" class="btn btn-dark">Ver Orden</a>
             </ul>
           </div>
 
