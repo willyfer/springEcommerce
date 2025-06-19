@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.curso.ecommerce.model.DetailOrder;
 import com.curso.ecommerce.model.Order;
 import com.curso.ecommerce.model.Product;
+import com.curso.ecommerce.model.User;
+import com.curso.ecommerce.service.IUserService;
 import com.curso.ecommerce.service.ProductService;
 
 @Controller
@@ -30,6 +32,10 @@ public class HomeController {
 	@Autowired
 	private ProductService productService;
 
+	@Autowired
+	private IUserService userService;
+
+	
 	List<DetailOrder> details = new ArrayList<DetailOrder>();
 	Order order = new Order();
 
@@ -121,8 +127,10 @@ public class HomeController {
 	
 	@GetMapping("/order")
 	public String order(Model model) {
+		User user = userService.findById(1).get(); 
 		model.addAttribute("cart", details);
 		model.addAttribute("order", order);
+		model.addAttribute("user", user);
 		return "user/resumenorden";
 	}
 	
